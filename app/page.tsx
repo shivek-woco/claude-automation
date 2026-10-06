@@ -298,7 +298,7 @@ export default function Home() {
 
       <footer className="site-footer">
         <div className="wrap footer-inner">
-          <span>&copy; {new Date().getFullYear()} Shortlist</span>
+          <span>&copy; 2026 WoCo</span>
           <ul>
             <li><a href="/privacy">Privacy</a></li>
             <li><a href="/terms">Terms</a></li>
