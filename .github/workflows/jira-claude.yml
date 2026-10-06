@@ -94,7 +94,7 @@ jobs:
                   --title "$KEY: $SUMMARY" --body-file .jira/summary.md)
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
-      - name: Comment back on Jira
+      - name: Comment back on Jira and move ticket
         if: always()
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
@@ -102,7 +102,23 @@ jobs:
           PR_URL: ${{ steps.pr.outputs.url }}
           STATUS: ${{ job.status }}
         run: |
-          msg="Claude run ${STATUS}. PR: ${PR_URL:-none}. Logs: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          target="Failure"
+          [ "$STATUS" = "success" ] && target="Success"
+
+          msg="Claude run ${STATUS} — moving ticket to ${target}. PR: ${PR_URL:-none}. Logs: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           jq -n --arg t "$msg" '{body:{type:"doc",version:1,content:[{type:"paragraph",content:[{type:"text",text:$t}]}]}}' \
             | curl -sS -u "$JIRA_AUTH" -H "Content-Type: application/json" \
                 -X POST "$JIRA_BASE_URL/rest/api/3/issue/$KEY/comment" --data @-
+
+          # Transition IDs are workflow-specific, so look up the one that leads to the target status.
+          tid=$(curl -sS -u "$JIRA_AUTH" "$JIRA_BASE_URL/rest/api/3/issue/$KEY/transitions" \
+            | jq -r --arg n "$target" '.transitions[] | select((.to.name | ascii_downcase) == ($n | ascii_downcase)) | .id' | head -n1)
+          if [ -z "$tid" ]; then
+            echo "::warning::No transition to '$target' is available from the ticket's current status — check the Jira workflow"
+            exit 0
+          fi
+          jq -n --arg id "$tid" '{transition:{id:$id}}' \
+            | curl -sS -f -u "$JIRA_AUTH" -H "Content-Type: application/json" \
+                -X POST "$JIRA_BASE_URL/rest/api/3/issue/$KEY/transitions" --data @- \
+            && echo "Moved $KEY to $target" \
+            || echo "::warning::Transition of $KEY to '$target' failed"
