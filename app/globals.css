@@ -651,6 +651,61 @@ a {
   max-width: 34em;
 }
 
+/* Signup */
+.signup-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.signup-intro h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.signup-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  display: grid;
+  gap: 20px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.field input {
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.field-error {
+  color: #b42318;
+  font-size: 0.9375rem;
+}
+
+.signup-success h2 {
+  font-size: 1.5rem;
+}
+
+.signup-success p {
+  margin-top: 10px;
+  color: var(--ink-soft);
+}
+
 /* Footer */
 .site-footer {
   padding: 28px 0;
@@ -687,7 +742,8 @@ a {
 @media (max-width: 1024px) {
   .hero-grid,
   .split-grid,
-  .faq-grid {
+  .faq-grid,
+  .signup-wrap {
     grid-template-columns: minmax(0, 1fr);
     gap: 48px;
   }
