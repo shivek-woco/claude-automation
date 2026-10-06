@@ -157,23 +157,26 @@ a {
   text-decoration: none;
 }
 
-/* Four bars in the stage colours, shortest to tallest */
+/* Minimal mark: a single rounded square with a checkmark */
 .logo-mark {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 20px;
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--offer);
 }
 
-.logo-mark i {
-  width: 5px;
-  border-radius: 2px;
+.logo-mark::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
 }
-
-.logo-mark i:nth-child(1) { height: 20px; background: var(--applied); }
-.logo-mark i:nth-child(2) { height: 15px; background: var(--screen); }
-.logo-mark i:nth-child(3) { height: 10px; background: var(--interview); }
-.logo-mark i:nth-child(4) { height: 6px; background: var(--offer); }
 
 .nav-links {
   display: flex;

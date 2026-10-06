@@ -95,12 +95,7 @@ export default function Home() {
       <header className="site-header">
         <div className="wrap header-inner">
           <Link href="/" className="logo" aria-label="Shortlist home">
-            <span className="logo-mark" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <i />
-            </span>
+            <span className="logo-mark" aria-hidden="true" />
             Shortlist
           </Link>
           <nav aria-label="Main">
